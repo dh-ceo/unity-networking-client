@@ -20,6 +20,7 @@ namespace DevelopersHub.Unity.Networking
         #region Functions 
         public static Manager instance = null;
         private int connectionId = -1;
+        private bool disconnectCalled = false;
         public int ConnectionID { get { return connectionId; } }
 
         private void Awake()
@@ -62,13 +63,22 @@ namespace DevelopersHub.Unity.Networking
             }
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            if (connectionId > 0)
+            if (connectionId >= 0)
             {
-                if (Configuration.Connected)
+                CheckDisconnect();
+            }
+        }
+
+        private void CheckDisconnect()
+        {
+            if (!disconnectCalled)
+            {
+                if (!Configuration.Connected)
                 {
-                    Configuration.DisconnectFromServer();
+                    disconnectCalled = true;
+                    OnDisconnectedConfirmed();
                 }
             }
         }
@@ -78,11 +88,18 @@ namespace DevelopersHub.Unity.Networking
         public Events events = new Events();
         public void OnConnectionConfirmed(int id)
         {
+            disconnectCalled = false;
             connectionId = id;
             events.onConnectedToServerConfirmed.Invoke();
         }
 
         public void OnDisconnected()
+        {
+            // connectionId = -1;
+            // events.onDisconnectedFromServer.Invoke();
+        }
+
+        public void OnDisconnectedConfirmed()
         {
             connectionId = -1;
             events.onDisconnectedFromServer.Invoke();
