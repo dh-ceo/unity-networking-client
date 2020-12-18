@@ -1,4 +1,12 @@
-﻿using System.Collections;
+//-----------------------------------------------------------------------
+// Author  : Armin Ahmadi
+// Email   : developershub.organization@gmail.com
+// Website : www.developershub.org
+// Copyright © 2020, Developers Hub
+// All rights reserved
+//-----------------------------------------------------------------------
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +30,7 @@ namespace DevelopersHub.Unity.Networking
             Carrier carrier = new Carrier(data);
             int id = carrier.GetInt32();
             carrier.Dispose();
-            Manager.instance.OnConnected(id);
+            Manager.instance.OnConnectionConfirmed(id);
         }
 
     }
