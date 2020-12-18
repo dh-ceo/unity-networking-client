@@ -1,4 +1,12 @@
-﻿using System.Collections;
+//-----------------------------------------------------------------------
+// Author  : Armin Ahmadi
+// Email   : developershub.organization@gmail.com
+// Website : www.developershub.org
+// Copyright © 2020, Developers Hub
+// All rights reserved
+//-----------------------------------------------------------------------
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,7 +20,6 @@ namespace DevelopersHub.Unity.Networking
         #region Functions 
         public static Manager instance = null;
         private int connectionId = -1;
-        private bool disconnectCalled = false;
         public int ConnectionID { get { return connectionId; } }
 
         private void Awake()
@@ -55,22 +62,13 @@ namespace DevelopersHub.Unity.Networking
             }
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            if (connectionId >= 0)
+            if (connectionId > 0)
             {
-                CheckDisconnect();
-            }
-        }
-
-        private void CheckDisconnect()
-        {
-            if (!disconnectCalled)
-            {
-                if (!Configuration.Connected)
+                if (Configuration.Connected)
                 {
-                    disconnectCalled = true;
-                    OnDisconnected();
+                    Configuration.DisconnectFromServer();
                 }
             }
         }
@@ -78,10 +76,10 @@ namespace DevelopersHub.Unity.Networking
 
         #region Events
         public Events events = new Events();
-        public void OnConnected(int id)
+        public void OnConnectionConfirmed(int id)
         {
             connectionId = id;
-            events.onConnectedToServer.Invoke();
+            events.onConnectedToServerConfirmed.Invoke();
         }
 
         public void OnDisconnected()
@@ -89,11 +87,25 @@ namespace DevelopersHub.Unity.Networking
             connectionId = -1;
             events.onDisconnectedFromServer.Invoke();
         }
+
+        public void OnConnected()
+        {
+            events.onConnectedToServer.Invoke();
+        }
+
+        public void OnConnectFailed()
+        {
+            connectionId = -1;
+            events.onFailedToConnectToServer.Invoke();
+        }
+
         [Serializable] public class Events
         {
             #region Manager Events
             public UnityEvent onConnectedToServer = new UnityEvent();
+            public UnityEvent onConnectedToServerConfirmed = new UnityEvent();
             public UnityEvent onDisconnectedFromServer = new UnityEvent();
+            public UnityEvent onFailedToConnectToServer = new UnityEvent();
             #endregion
 
             #region Client Incoming Events
