@@ -1,4 +1,12 @@
-﻿using System;
+//-----------------------------------------------------------------------
+// Author  : Armin Ahmadi
+// Email   : developershub.organization@gmail.com
+// Website : www.developershub.org
+// Copyright © 2020, Developers Hub
+// All rights reserved
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
