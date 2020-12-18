@@ -1,5 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+//-----------------------------------------------------------------------
+// Author  : Armin Ahmadi
+// Email   : developershub.organization@gmail.com
+// Website : www.developershub.org
+// Copyright © 2020, Developers Hub
+// All rights reserved
+//-----------------------------------------------------------------------
+
 using UnityEngine;
 
 namespace DevelopersHub.Unity.Networking
@@ -20,7 +26,37 @@ namespace DevelopersHub.Unity.Networking
 
         internal static void ConnectToServer()
         {
+            core.ConnectionFailed += Core_ConnectionFailed;
+            core.ConnectionLost += Core_ConnectionLost;
+            core.ConnectionSuccess += Core_ConnectionSuccess;
             core.Connect("127.0.0.1", 5555);
+        }
+
+        private static void Core_ConnectionSuccess()
+        {
+            Manager.instance.OnConnected();
+        }
+
+        private static void Core_ConnectionLost()
+        {
+            Manager.instance.OnDisconnected();
+        }
+
+        private static void Core_ConnectionFailed()
+        {
+            Manager.instance.OnConnectFailed();
+        }
+
+        private void OnDestroy()
+        {
+            Unregister();
+        }
+
+        private void Unregister()
+        {
+            core.ConnectionFailed -= Core_ConnectionFailed;
+            core.ConnectionLost -= Core_ConnectionLost;
+            core.ConnectionSuccess -= Core_ConnectionSuccess;
         }
 
         internal static void DisconnectFromServer()
