@@ -44,7 +44,7 @@ namespace DevelopersHub.Unity.Networking
 
         private static void Core_ConnectionFailed()
         {
-            Manager.instance.OnConnectFailed();
+            Manager.instance.OnConnectFailedCall();
         }
 
         private void OnDestroy()
