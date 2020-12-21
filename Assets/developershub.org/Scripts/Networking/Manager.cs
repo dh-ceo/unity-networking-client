@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using UnityEngine.UI;
+using System.ComponentModel;
 
 namespace DevelopersHub.Unity.Networking
 {
@@ -22,7 +24,8 @@ namespace DevelopersHub.Unity.Networking
         private int connectionId = -1;
         private bool disconnectCalled = false;
         public int ConnectionID { get { return connectionId; } }
-
+        protected System.ComponentModel.AsyncOperation asyncOperation;
+        
         private void Awake()
         {
             Manager[] networkManagers = FindObjectsOfType<Manager>();
@@ -33,6 +36,7 @@ namespace DevelopersHub.Unity.Networking
             else
             {
                 instance = this;
+                asyncOperation = AsyncOperationManager.CreateOperation(null);
             }
         }
 
@@ -62,7 +66,17 @@ namespace DevelopersHub.Unity.Networking
                 }
             }
         }
+        
+        public void OnConnectFailedCall()
+        {
+            asyncOperation.Post(OnConnectFailed, EventArgs.Empty);
+        }
 
+        private void OnConnectFailed(object state)
+        {
+            OnConnectFailed();
+        }
+        
         private void Update()
         {
             if (connectionId >= 0)
