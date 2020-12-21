@@ -27,7 +27,7 @@ namespace DevelopersHub.Unity.Networking
             {
                 //Carrier carrier = new Carrier(4);
                 //carrier.SetInt32((int)OutgoingType.example);
-                //Configuration.core.SendData(carrier.Data, carrier.Head);
+                //Configuration.core.SendData(carrier.values, carrier.space);
                 //carrier.Dispose();
             }
             catch (Exception ex)
